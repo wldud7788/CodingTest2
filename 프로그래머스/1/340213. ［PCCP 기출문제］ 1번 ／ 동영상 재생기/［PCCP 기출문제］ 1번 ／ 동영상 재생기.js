@@ -28,7 +28,7 @@ function solution(video_len, pos, op_start, op_end, commands) {
         } else {
             currentMs = Math.max(0,currentMs - 10)
         }
-        // commands가 1개일 경우를 위해 추가
+        // 작업 이후 결과값이 오프닝 구간일 경우를 위해 추가
         if(op_startTimeMs <= currentMs && currentMs <= op_endTimeMS){
             currentMs = op_endTimeMS;
         }
