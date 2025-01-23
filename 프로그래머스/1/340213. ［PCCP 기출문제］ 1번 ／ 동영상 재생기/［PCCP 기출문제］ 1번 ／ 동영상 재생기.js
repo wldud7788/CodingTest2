@@ -1,32 +1,37 @@
 function solution(video_len, pos, op_start, op_end, commands) {
-    const [mm,ss] = pos.split(':');
-    let currentMs = Number(mm)* 60 + Number(ss);
+    // 시간 문자열을 ms로 변환
+    const timeToMs = (time) => {
+        const [mm,ss] = time.split(':').map(Number);
+        return mm * 60 + ss
+    }
     
-    const [op_start_mm, op_start_ss] = op_start.split(':');
-    const op_startTime = Number(op_start_mm)* 60 + Number(op_start_ss); 
+    let currentMs = timeToMs(pos);
+    const op_startTimeMs = timeToMs(op_start);
+    const op_endTimeMS = timeToMs(op_end);
+    const videoTimeMs = timeToMs(video_len);
     
-    const [op_end_mm, op_end_ss] = op_end.split(':');
-    const op_endTime = Number(op_end_mm)* 60 + Number(op_end_ss);
-    
-    const [video_len_mm, video_len_ss] = video_len.split(':');
-    const videoTime = Number(video_len_mm)* 60 + Number(video_len_ss);
+    // ms를 문자열 시간으로 변환
+    const resultTimeToMs = (ms) => {
+        const mm = Math.floor(ms/60);
+        const ss = ms % 60;
+        const result = `${mm < 10 ? '0' + mm : mm }:${ss < 10 ? '0' + ss : ss}`
+        return result
+    }
     
     commands.forEach((item)=>{
-        if(op_startTime <= currentMs && currentMs <= op_endTime){
-            currentMs = op_endTime;
+        // 구간 체크 
+        if(op_startTimeMs <= currentMs && currentMs <= op_endTimeMS){
+            currentMs = op_endTimeMS;
         }
         if(item === "next"){
-            currentMs = Math.min(videoTime, currentMs + 10)
+            currentMs = Math.min(videoTimeMs, currentMs + 10)
         } else {
             currentMs = Math.max(0,currentMs - 10)
         }
-        if(op_startTime <= currentMs && currentMs <= op_endTime){
-            currentMs = op_endTime;
+        // commands가 1개일 경우를 위해 추가
+        if(op_startTimeMs <= currentMs && currentMs <= op_endTimeMS){
+            currentMs = op_endTimeMS;
         }
     })
-    const resultMm = Math.floor(currentMs / 60);
-    const resultSs = currentMs % 60;
-    
-    const [result_mm, result_ss] = [Math.floor(currentMs / 60),currentMs % 60]
-    return `${result_mm < 10 ? '0' + result_mm : result_mm}:${result_ss < 10 ? '0' + result_ss : result_ss}`;
+    return resultTimeToMs(currentMs)
 }
