@@ -1,44 +1,34 @@
 function solution(survey, choices) {
-    const score = [3,2,1,0,1,2,3]
     const map = new Map();
-
+    let answer = "";
+    const score = [3,2,1,0,1,2,3]
+    const types = [
+        ["R","T"],
+        ["C","F"],
+        ["J","M"],
+        ["A","N"],
+    ]
     "RTCFJMAN".split('').forEach((char)=>{
         map.set(char,0);
     })
     
-    let answer = "";
     survey.forEach((item,idx)=>{
-        const [첫번째, 두번째] = item.split(''); 
+        const [first, second] = item.split(''); 
         if(choices[idx] < 4) {
-            map.set(첫번째,map.get(첫번째)+score[choices[idx]-1])
+            map.set(first,map.get(first)+score[choices[idx]-1])
         } else if(choices[idx] > 4){
-            map.set(두번째,map.get(두번째)+score[choices[idx]-1])
+            map.set(second,map.get(second)+score[choices[idx]-1])
         }
     })
     
-    if(map.get("R") >= map.get("T")){
-        answer += "R"
-    } else {
-        answer += "T"
-    }
-    
-    if(map.get("C") >= map.get("F")){
-        answer += "C"
-    } else {
-        answer += "F"
-    }
-    
-    if(map.get("J") >= map.get("M")){
-        answer += "J"
-    } else {
-        answer += "M"
-    }
-    
-    if(map.get("A") >= map.get("N")){
-        answer += "A"
-    } else {
-        answer += "N"
-    }
+    types.forEach((item)=>{
+        const [first,second] = item;
+        if(map.get(first) >= map.get(second)){
+            answer += first
+        } else {
+            answer += second
+        }
+    })
     
     return answer
 }
